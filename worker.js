@@ -43,6 +43,8 @@ async function seed(d,env){
  if(env.SEED_DEMO_PRODUCTS!=='0')await d.batch(demoProducts.map((p,i)=>d.q('INSERT OR IGNORE INTO products(id,title,description,cost,stock,emoji) VALUES(?,?,?,?,?,?)',i+1,...p)));
 }
 async function dispatch(req,env){
+ const transportUrl=new URL(req.url);
+ if(transportUrl.protocol==='http:'&&!['localhost','127.0.0.1','[::1]'].includes(transportUrl.hostname)){transportUrl.protocol='https:';return Response.redirect(transportUrl.href,308);}
  const asset=assets[new URL(req.url).pathname];if(asset&&req.method==='GET'){const bytes=Uint8Array.from(atob(asset.data),c=>c.charCodeAt(0));return new Response(bytes,{headers:{'Content-Type':asset.type,'Cache-Control':'public, max-age=86400','X-Content-Type-Options':'nosniff'}});}
  if(new URL(req.url).pathname==='/webmcp.js')return new Response(`if(document.modelContext?.registerTool){document.modelContext.registerTool({name:'read_current_exchange_page',description:'读取当前页面上可见的商城商品或本人记录，不进行兑换或更改数据。',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true},execute:async()=>({content:[{type:'text',text:document.querySelector('main').innerText}]})});}`,{headers:{'Content-Type':'application/javascript; charset=utf-8','X-Content-Type-Options':'nosniff'}});
  const url=new URL(req.url),path=url.pathname,d=database(env);

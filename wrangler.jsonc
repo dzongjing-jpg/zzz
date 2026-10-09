@@ -5,12 +5,25 @@
   "compatibility_date": "2026-10-09",
   "workers_dev": true,
   "preview_urls": false,
-  "vars": { "SEED_DEMO_PRODUCTS": "0" },
-  "build": { "command": "node build.mjs" },
+  "vars": {
+    "SEED_DEMO_PRODUCTS": "0"
+  },
+  "build": {
+    "command": "node build.mjs"
+  },
   "d1_databases": [
-    { "binding": "DB", "database_name": "fangcun-exchange-db", "migrations_dir": "drizzle" }
+    {
+      "binding": "DB",
+      "database_name": "fangcun-exchange-db",
+      "migrations_dir": "drizzle",
+      "database_id": "37fe66d1-2820-4d8f-876c-ee10c4bf406b"
+    }
   ],
   "r2_buckets": [
-    { "binding": "BUCKET", "bucket_name": "fangcun-exchange-images" }
-  ]
+    {
+      "binding": "BUCKET",
+      "bucket_name": "fangcun-exchange-images"
+    }
+  ],
+  "account_id": "f9391e34bbb1605cefa8173733132230"
 }
