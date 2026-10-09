@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fangcun-exchange",
+  "main": "dist/server/index.js",
+  "compatibility_date": "2026-10-09",
+  "workers_dev": true,
+  "preview_urls": false,
+  "vars": { "SEED_DEMO_PRODUCTS": "0" },
+  "build": { "command": "node build.mjs" },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "fangcun-exchange-db", "migrations_dir": "drizzle" }
+  ],
+  "r2_buckets": [
+    { "binding": "BUCKET", "bucket_name": "fangcun-exchange-images" }
+  ]
+}

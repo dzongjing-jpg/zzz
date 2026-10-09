@@ -6,11 +6,15 @@
     "build": "node build.mjs",
     "test": "node --test tests.mjs",
     "db:generate": "drizzle-kit generate",
-    "preview": "node preview.mjs"
+    "preview": "node preview.mjs",
+    "deploy:check": "wrangler deploy --dry-run",
+    "db:migrate:remote": "wrangler d1 migrations apply DB --remote",
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
     "drizzle-kit": "^0.31.0",
-    "drizzle-orm": "^0.44.0"
+    "drizzle-orm": "^0.44.0",
+    "wrangler": "4.148.0"
   },
   "engines": {
     "node": ">=24"

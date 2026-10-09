@@ -37,6 +37,22 @@ pnpm preview
 
 ## 生产部署要求
 
+### Cloudflare 部署配置
+
+仓库包含 `wrangler.jsonc`。当前配置为公开网站，关闭演示商品初始化；首次初始化仅创建管理员，玩家自行注册。
+
+完成 Cloudflare 授权后，创建 D1 数据库和 R2 图片桶，将真实数据库 ID 写入配置，再执行：
+
+```sh
+pnpm exec wrangler d1 migrations apply DB --remote
+pnpm exec wrangler secret put ADMIN_PASSWORD_HASH
+pnpm build
+pnpm test
+pnpm exec wrangler deploy
+```
+
+`ADMIN_PASSWORD_HASH` 输入 `hashPassword()` 生成的哈希，不是明文密码。首次部署前必须设置；没有初始化管理员时服务拒绝开放注册。首次部署会使用新数据库，不携带旧网站数据。尚未完成账号授权、资源创建和成功部署前，不能将配置中的名称视为已上线网址。
+
 GitHub 仓库负责保存代码。本项目有后端和数据库，不能仅通过 GitHub Pages 提供完整服务。
 
 当前运行架构为 Cloudflare Workers 兼容的 JavaScript Worker，并需要以下运行配置：

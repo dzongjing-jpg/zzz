@@ -3,6 +3,15 @@ import assert from 'node:assert/strict';
 import worker,{hashPassword} from './dist/server/index.js';
 import {localDatabase} from './local-db.mjs';
 import {readFileSync} from 'node:fs';
+test('Fresh production deployment starts with only its administrator and no demo products',async()=>{
+ const DB=localDatabase(),env={DB,SEED_DEMO_PRODUCTS:'0',ADMIN_PASSWORD_HASH:await hashPassword('FreshAdmin123')};
+ assert.equal((await worker.fetch(new Request('https://test.example/'),env)).status,200);
+ assert.equal(DB.raw.prepare('SELECT COUNT(*) AS n FROM users').get().n,1);
+ assert.equal(DB.raw.prepare('SELECT COUNT(*) AS n FROM products').get().n,0);
+ assert.equal(DB.raw.prepare('SELECT COUNT(*) AS n FROM orders').get().n,0);
+ assert.equal((await worker.fetch(new Request('https://test.example/'),env)).status,200);
+ assert.equal(DB.raw.prepare('SELECT COUNT(*) AS n FROM products').get().n,0);DB.raw.close();
+});
 test('Six-character passwords work for registration, login and password changes',async()=>{
  const DB=localDatabase(),env={DB,ADMIN_PASSWORD_HASH:await hashPassword('OriginalPassword123')};
  const post=(path,data,cookie='')=>worker.fetch(new Request('https://test.example'+path,{method:'POST',headers:{cookie,origin:'https://test.example'},body:new URLSearchParams(data)}),env);

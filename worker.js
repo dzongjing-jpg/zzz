@@ -38,8 +38,9 @@ const cookie=t=>`sid=${t}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${t?6
 function database(env){if(!env.DB)throw Error('Database unavailable');return {q:(sql,...args)=>env.DB.prepare(sql).bind(...args),one:(sql,...args)=>env.DB.prepare(sql).bind(...args).first(),all:async(sql,...args)=>(await env.DB.prepare(sql).bind(...args).all()).results,run:(sql,...args)=>env.DB.prepare(sql).bind(...args).run(),batch:items=>env.DB.batch(items)};}
 export const demoProducts=[['一等上古碎片','游戏内人工发放',500,10,'💎'],['随机变身卡','游戏内人工发放',300,20,'🎴'],['游戏银两','数量由管理员确认',1000,5,'🪙'],['神兽抽奖资格','按帮会规则参与抽奖',2000,3,'🐉']];
 async function seed(d,env){
+ if(!env.ADMIN_PASSWORD_HASH&&!await d.one("SELECT id FROM users WHERE role='admin' LIMIT 1"))throw Error('Administrator initialization is required');
  if(env.ADMIN_PASSWORD_HASH)await d.run("INSERT OR IGNORE INTO users(id,username,password_hash,role,verified) VALUES(1,'admin',?,'admin',1)",env.ADMIN_PASSWORD_HASH);
- await d.batch(demoProducts.map((p,i)=>d.q('INSERT OR IGNORE INTO products(id,title,description,cost,stock,emoji) VALUES(?,?,?,?,?,?)',i+1,...p)));
+ if(env.SEED_DEMO_PRODUCTS!=='0')await d.batch(demoProducts.map((p,i)=>d.q('INSERT OR IGNORE INTO products(id,title,description,cost,stock,emoji) VALUES(?,?,?,?,?,?)',i+1,...p)));
 }
 async function dispatch(req,env){
  const asset=assets[new URL(req.url).pathname];if(asset&&req.method==='GET'){const bytes=Uint8Array.from(atob(asset.data),c=>c.charCodeAt(0));return new Response(bytes,{headers:{'Content-Type':asset.type,'Cache-Control':'public, max-age=86400','X-Content-Type-Options':'nosniff'}});}
