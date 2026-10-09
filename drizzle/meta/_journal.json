@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1791521645382,
+      "tag": "0000_material_black_tarantula",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1791521797358,
+      "tag": "0001_atomic_exchange",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1791522775552,
+      "tag": "0002_game_points_snapshot",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1791523059704,
+      "tag": "0003_product_images",
+      "breakpoints": true
+    }
+  ]
+}
